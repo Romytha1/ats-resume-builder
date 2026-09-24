@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ATS Resume Builder | صانع السيرة الذاتية</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- شريط التحكم العلوي -->
+  <header class="app-header no-print">
+    <div class="logo">
+      <span class="badge">ATS-Friendly</span>
+      <h2>منشئ السيرة الذاتية المهني</h2>
+    </div>
+    <div class="actions">
+      <button id="langToggleBtn" class="btn btn-secondary">English</button>
+      <button id="clearBtn" class="btn btn-outline">مسح الحقول 🗑️</button>
+      <button id="loadDemoBtn" class="btn btn-outline">تعبئة نموذج تجريبي</button>
+      <button id="printBtn" class="btn btn-primary">تحميل PDF 📄</button>
+    </div>
+  </header>
+
+  <main class="app-container">
+    <!-- لوحة إدخال البيانات -->
+    <section class="form-section no-print">
+      <div class="section-title">
+        <h3 id="formTitle">البيانات والمعلومات</h3>
+        <p id="formSub">اكتب بياناتك وستظهر بالمعاينة مباشرة وفق معايير أنظمة التوظيف ATS</p>
+      </div>
+
+      <!-- البيانات الشخصية -->
+      <div class="form-group-block">
+        <h4 id="lblPersonalInfo">البيانات الشخصية</h4>
+        <input type="text" id="inpName" placeholder="الاسم الكامل">
+        <input type="text" id="inpTitle" placeholder="المسمى الوظيفي المستهدف">
+        <div class="row">
+          <input type="email" id="inpEmail" placeholder="البريد الإلكتروني">
+          <input type="text" id="inpPhone" placeholder="رقم الجوال">
+        </div>
+        <div class="row">
+          <input type="text" id="inpLocation" placeholder="المدينة، الدولة">
+          <input type="text" id="inpLink" placeholder="رابط لينكدإن أو الموقع">
+        </div>
+      </div>
+
+      <!-- الملخص المهني -->
+      <div class="form-group-block">
+        <h4 id="lblSummary">الملخص المهني</h4>
+        <textarea id="inpSummary" rows="3" placeholder="ملخص مهني موجز يبرز خبراتك وأهم مهاراتك..."></textarea>
+      </div>
+
+      <!-- الخبرات المهنية -->
+      <div class="form-group-block">
+        <div class="block-header">
+          <h4 id="lblExperience">الخبرات المهنية</h4>
+          <button type="button" id="addExpBtn" class="btn-sm">+ إضافة خبرة</button>
+        </div>
+        <div id="experienceInputsList"></div>
+      </div>
+
+      <!-- التعليم والمؤهلات -->
+      <div class="form-group-block">
+        <div class="block-header">
+          <h4 id="lblEducation">التعليم والمؤهلات</h4>
+          <button type="button" id="addEduBtn" class="btn-sm">+ إضافة مؤهل</button>
+        </div>
+        <div id="educationInputsList"></div>
+      </div>
+
+      <!-- المهارات -->
+      <div class="form-group-block">
+        <h4 id="lblSkills">المهارات والكلمات المفتاحية</h4>
+        <textarea id="inpSkills" rows="3" placeholder="افصل بين كل مهارة بفاصلة (مثال: HTML, CSS, JavaScript, UI Design, Git)"></textarea>
+      </div>
+    </section>
+
+    <!-- المعاينة الحية لورقة الـ A4 -->
+    <section class="preview-section">
+      <div class="a4-sheet" id="cvPaper">
+        <!-- ترويسة الـ CV -->
+        <div class="cv-header">
+          <h1 id="cvName">الاسم الكامل</h1>
+          <div class="cv-role" id="cvTitle">المسمى الوظيفي</div>
+          <div class="cv-contact" id="cvContact">
+            <span id="cvEmail">email@example.com</span>
+            <span id="cvPhoneSep"> • </span><span id="cvPhone">+966 50 000 0000</span>
+            <span id="cvLocationSep"> • </span><span id="cvLocation">المدينة، الدولة</span>
+            <span id="cvLinkSep"> • </span><span id="cvLink">linkedin.com/in/username</span>
+          </div>
+        </div>
+
+        <!-- الملخص المهني -->
+        <div class="cv-section" id="secSummary">
+          <h2 class="cv-section-title" id="cvHeadingSummary">الملخص المهني</h2>
+          <div class="cv-divider"></div>
+          <p id="cvSummaryText">ملخص مهني احترافي يركز على الكلمات المفتاحية ومجال تخصصك.</p>
+        </div>
+
+        <!-- الخبرات العملية -->
+        <div class="cv-section" id="secExp">
+          <h2 class="cv-section-title" id="cvHeadingExp">الخبرات العملية</h2>
+          <div class="cv-divider"></div>
+          <div id="cvExpList"></div>
+        </div>
+
+        <!-- التعليم -->
+        <div class="cv-section" id="secEdu">
+          <h2 class="cv-section-title" id="cvHeadingEdu">التعليم</h2>
+          <div class="cv-divider"></div>
+          <div id="cvEduList"></div>
+        </div>
+
+        <!-- المهارات -->
+        <div class="cv-section" id="secSkills">
+          <h2 class="cv-section-title" id="cvHeadingSkills">المهارات التقنية</h2>
+          <div class="cv-divider"></div>
+          <p id="cvSkillsList">المهارات تظهر هنا مفصولة بفواصل وفق معايير ATS.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
