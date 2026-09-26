@@ -452,3 +452,48 @@ printBtn.addEventListener('click', () => {
 addExp();
 addEdu();
 updatePersonalInfo();
+// دالة لحفظ جميع المدخلات تلقائياً
+function saveFormData() {
+  const inputs = document.querySelectorAll('input, textarea, select');
+  const data = {};
+  inputs.forEach(input => {
+    if (input.id) {
+      data[input.id] = input.value;
+    }
+  });
+  localStorage.setItem('ats_resume_data', JSON.stringify(data));
+}
+
+// دالة لاسترجاع البيانات عند فتح أو تحديث الصفحة
+function loadFormData() {
+  const savedData = localStorage.getItem('ats_resume_data');
+  if (savedData) {
+    const data = JSON.parse(savedData);
+    Object.keys(data).forEach(id => {
+      const element = document.getElementById(id);
+      if (element) {
+        element.value = data[id];
+        // تشغيل حدث التحديث عشان تنعكس البيانات فوراً في المعاينة
+        element.dispatchEvent(new Event('input'));
+      }
+    });
+  }
+}
+
+// تفعيل الحفظ عند الكتابة والاسترجاع عند تحميل الصفحة
+window.addEventListener('DOMContentLoaded', () => {
+  loadFormData();
+  
+  // حفظ البيانات عند أي تعديل في الحقول
+  document.addEventListener('input', (e) => {
+    if (e.target.matches('input, textarea, select')) {
+      saveFormData();
+    }
+  });
+});
+function clearResumeData() {
+  if (confirm('هل أنت متأكد من مسح جميع البيانات والبدء من جديد؟')) {
+    localStorage.removeItem('ats_resume_data');
+    location.reload();
+  }
+}
