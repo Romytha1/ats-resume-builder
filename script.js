@@ -58,8 +58,13 @@ function updatePersonalInfo() {
   cvEmail.textContent = email;
   cvPhone.textContent = phone;
   cvLocation.textContent = loc;
-  cvLink.textContent = link;
-
+if (link) {
+  const formattedUrl = link.startsWith('http') ? link : `https://${link}`;
+  const label = link.toLowerCase().includes('linkedin') ? 'LinkedIn' : (currentLang === 'ar' ? 'الموقع المهني' : 'Portfolio');
+  cvLink.innerHTML = `<a href="${formattedUrl}" target="_blank" style="color: inherit; text-decoration: underline;">${label}</a>`;
+} else {
+  cvLink.innerHTML = '';
+}
   // إخفاء الفواصل إذا كان العنصر فارغاً
   cvPhoneSep.style.display = (email && phone) ? 'inline' : 'none';
   cvLocationSep.style.display = ((email || phone) && loc) ? 'inline' : 'none';
@@ -289,6 +294,9 @@ clearBtn.addEventListener('click', () => {
   educations = [];
   renderExperiences();
   renderEducation();
+  certifications = [];
+  renderCertifications();
+  updateCertPreview();
   updatePersonalInfo();
 });
 
@@ -320,12 +328,18 @@ loadDemoBtn.addEventListener('click', () => {
     ];
 
     educations = [
+      
       {
         degree: 'بكالوريوس علوم الحاسب',
         school: 'جامعة الملك فهد للبترول والمعادن',
         dates: '2017 - 2021'
       }
     ];
+    certifications = [
+    { name: 'Meta Front-End Developer Professional Certificate', issuer: 'Coursera / Meta', date: '2023' }
+  ];
+  renderCertifications();
+  updateCertPreview();
   } else {
     inpName.value = 'Sarah Al-Ghamdi';
     inpTitle.value = 'Frontend Web Developer & UI Designer';
@@ -461,6 +475,7 @@ function saveFormData() {
       data[input.id] = input.value;
     }
   });
+  data.certifications = certifications;
   localStorage.setItem('ats_resume_data', JSON.stringify(data));
 }
 
@@ -476,10 +491,16 @@ function loadFormData() {
         // تشغيل حدث التحديث عشان تنعكس البيانات فوراً في المعاينة
         element.dispatchEvent(new Event('input'));
       }
+     
     });
-  }
-}
 
+ if (data.certifications) {
+        certifications = data.certifications;
+        renderCertifications();
+        updateCertPreview();
+      }
+        }
+}
 // تفعيل الحفظ عند الكتابة والاسترجاع عند تحميل الصفحة
 window.addEventListener('DOMContentLoaded', () => {
   loadFormData();
@@ -496,4 +517,351 @@ function clearResumeData() {
     localStorage.removeItem('ats_resume_data');
     location.reload();
   }
+}
+// --- تصدير واستيراد البيانات (JSON Backup) ---
+
+const exportBtn = document.getElementById('exportBtn');
+const importTriggerBtn = document.getElementById('importTriggerBtn');
+const importInput = document.getElementById('importInput');
+
+// 1. تصدير البيانات كملف JSON
+if (exportBtn) {
+  exportBtn.addEventListener('click', () => {
+    const data = localStorage.getItem('resumeData');
+    if (!data) {
+      alert('لا توجد بيانات محفوظة لتصديرها بعد!');
+      return;
+    }
+
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'ats-resume-backup.json';
+    link.click();
+    URL.revokeObjectURL(url);
+  });
+}
+
+// 2. فتح نافذة اختيار الملف عند النقر على زر الاستيراد
+if (importTriggerBtn && importInput) {
+  importTriggerBtn.addEventListener('click', () => {
+    importInput.click();
+  });
+
+  // 3. قراءة الملف وتعبئة الحقول تلقائياً
+  importInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const parsedData = JSON.parse(event.target.result);
+        localStorage.setItem('resumeData', JSON.stringify(parsedData));
+        location.reload();
+      } catch (err) {
+        alert('الملف غير صالح، يرجى التأكد من اختيار ملف بصيغة .json صحيحة.');
+      }
+    };
+    reader.readAsText(file);
+  });
+}
+
+// --- احتساب نقاط توافق الـ ATS لحظياً ---
+function calculateAtsScore() {
+  let score = 0;
+
+  // 1. بيانات التواصل (البريد ورقم الجوال)
+  const phone = document.getElementById('phoneInput')?.value.trim();
+  const email = document.getElementById('emailInput')?.value.trim();
+  const chkContact = document.getElementById('chk-contact');
+  if (phone && email) {
+    score += 20;
+    if (chkContact) {
+      chkContact.className = 'done';
+      chkContact.textContent = '✅ بيانات التواصل كاملة';
+    }
+  } else if (chkContact) {
+    chkContact.className = 'pending';
+    chkContact.textContent = '⚪ بيانات التواصل كاملة (بريد وهاتف)';
+  }
+
+  // 2. الملخص المهني
+  const summary = document.getElementById('summaryInput')?.value.trim();
+  const chkSummary = document.getElementById('chk-summary');
+  if (summary && summary.length >= 40) {
+    score += 20;
+    if (chkSummary) {
+      chkSummary.className = 'done';
+      chkSummary.textContent = '✅ ملخص مهني كافٍ ومكتمل';
+    }
+  } else if (chkSummary) {
+    chkSummary.className = 'pending';
+    chkSummary.textContent = '⚪ ملخص مهني واضح ومكتمل';
+  }
+
+  // 3. الخبرة المهنية
+  const expTitle = document.querySelector('.exp-title')?.value.trim();
+  const expCompany = document.querySelector('.exp-company')?.value.trim();
+  const chkExp = document.getElementById('chk-experience');
+  if (expTitle && expCompany) {
+    score += 20;
+    if (chkExp) {
+      chkExp.className = 'done';
+      chkExp.textContent = '✅ تمت إضافة خبرة مهنية سابقة';
+    }
+  } else if (chkExp) {
+    chkExp.className = 'pending';
+    chkExp.textContent = '⚪ خبرة مهنية واحدة على الأقل';
+  }
+
+  // 4. التعليم
+  const eduDegree = document.querySelector('.edu-degree')?.value.trim();
+  const eduSchool = document.querySelector('.edu-school')?.value.trim();
+  const chkEdu = document.getElementById('chk-education');
+  if (eduDegree && eduSchool) {
+    score += 20;
+    if (chkEdu) {
+      chkEdu.className = 'done';
+      chkEdu.textContent = '✅ المؤهل الأكاديمي مضاف';
+    }
+  } else if (chkEdu) {
+    chkEdu.className = 'pending';
+    chkEdu.textContent = '⚪ المؤهل الأكاديمي والتعليمي';
+  }
+
+  // 5. المهارات (تحديد 4 مهارات على الأقل)
+  const skillsText = document.getElementById('skillsInput')?.value.trim();
+  const skillsCount = skillsText ? skillsText.split(/[\n,،]+/).filter(s => s.trim().length > 0).length : 0;
+  const chkSkills = document.getElementById('chk-skills');
+  if (skillsCount >= 4) {
+    score += 20;
+    if (chkSkills) {
+      chkSkills.className = 'done';
+      chkSkills.textContent = `✅ المهارات مكتملة (${skillsCount} مهارات)`;
+    }
+  } else if (chkSkills) {
+    chkSkills.className = 'pending';
+    chkSkills.textContent = `⚪ إضافة 4 مهارات أساسية فأكثر (الحالي: ${skillsCount})`;
+  }
+
+  // تحديث شريط النسبة والألوان
+  const scoreBadge = document.getElementById('atsScoreText');
+  const progressFill = document.getElementById('atsProgressFill');
+
+  if (scoreBadge && progressFill) {
+    scoreBadge.textContent = `${score}%`;
+    progressFill.style.width = `${score}%`;
+
+    if (score <= 40) {
+      progressFill.style.backgroundColor = '#ef4444'; // أحمر
+    } else if (score < 80) {
+      progressFill.style.backgroundColor = '#f59e0b'; // برتقالي
+    } else {
+      progressFill.style.backgroundColor = '#10b981'; // أخضر
+    }
+  }
+}
+
+// تشغيل الفحص عند أي إدخال في الصفحة وفي البداية
+document.addEventListener('input', calculateAtsScore);
+// --- احتساب نقاط توافق الـ ATS لحظياً ---
+// --- احتساب نقاط توافق الـ ATS لحظياً ---
+function calculateAtsScore() {
+  let score = 0;
+
+  // جلب كافة المدخلات في النموذج
+  const inputs = Array.from(document.querySelectorAll('.form-section input, .form-section textarea'));
+  
+  // 1. فحص بيانات التواصل (البريد ورقم الهاتف)
+  const hasEmail = inputs.some(i => i.value.includes('@'));
+  const hasPhone = inputs.some(i => {
+    const val = i.value.trim();
+    // البحث عن أي حقل يحتوي أرقاماً متتالية تشبه رقم الجوال
+    return val.match(/\d{5,}/);
+  });
+
+  const chkContact = document.getElementById('chk-contact');
+  if (hasEmail && hasPhone) {
+    score += 20;
+    if (chkContact) {
+      chkContact.className = 'done';
+      chkContact.textContent = '✅ بيانات التواصل كاملة (بريد وهاتف)';
+    }
+  } else if (chkContact) {
+    chkContact.className = 'pending';
+    chkContact.textContent = '⚪ بيانات التواصل كاملة (بريد وهاتف)';
+  }
+
+  // 2. الملخص المهني (البحث عن أي textarea يتعدى 25 حرفاً)
+  const textareas = Array.from(document.querySelectorAll('textarea'));
+  const hasSummary = textareas.some(t => t.value.trim().length >= 25);
+  const chkSummary = document.getElementById('chk-summary');
+  if (hasSummary) {
+    score += 20;
+    if (chkSummary) {
+      chkSummary.className = 'done';
+      chkSummary.textContent = '✅ ملخص مهني كافٍ ومكتمل';
+    }
+  } else if (chkSummary) {
+    chkSummary.className = 'pending';
+    chkSummary.textContent = '⚪ ملخص مهني واضح ومكتمل';
+  }
+
+  // 3. الخبرة المهنية
+  const expBlock = document.querySelector('#experienceContainer, .experience-group, [id*="exp"]');
+  const hasExp = expBlock ? Array.from(expBlock.querySelectorAll('input, textarea')).some(i => i.value.trim().length > 2) : false;
+  const chkExp = document.getElementById('chk-experience');
+  if (hasExp) {
+    score += 20;
+    if (chkExp) {
+      chkExp.className = 'done';
+      chkExp.textContent = '✅ تمت إضافة خبرة مهنية سابقة';
+    }
+  } else if (chkExp) {
+    chkExp.className = 'pending';
+    chkExp.textContent = '⚪ خبرة مهنية واحدة على الأقل';
+  }
+
+  // 4. التعليم
+  const eduBlock = document.querySelector('#educationContainer, .education-group, [id*="edu"]');
+  const hasEdu = eduBlock ? Array.from(eduBlock.querySelectorAll('input, textarea')).some(i => i.value.trim().length > 2) : false;
+  const chkEdu = document.getElementById('chk-education');
+  if (hasEdu) {
+    score += 20;
+    if (chkEdu) {
+      chkEdu.className = 'done';
+      chkEdu.textContent = '✅ المؤهل الأكاديمي مضاف';
+    }
+  } else if (chkEdu) {
+    chkEdu.className = 'pending';
+    chkEdu.textContent = '⚪ المؤهل الأكاديمي والتعليمي';
+  }
+
+  // 5. المهارات
+  const skillsInput = document.querySelector('#skills, #skillsInput, textarea[placeholder*="مهار"], input[placeholder*="مهار"]');
+  let skillsCount = 0;
+  if (skillsInput && skillsInput.value.trim()) {
+    skillsCount = skillsInput.value.trim().split(/[\n,،]+/).filter(s => s.trim().length > 0).length;
+  }
+  const chkSkills = document.getElementById('chk-skills');
+  if (skillsCount >= 4) {
+    score += 20;
+    if (chkSkills) {
+      chkSkills.className = 'done';
+      chkSkills.textContent = `✅ المهارات مكتملة (${skillsCount} مهارات)`;
+    }
+  } else if (chkSkills) {
+    chkSkills.className = 'pending';
+    chkSkills.textContent = `⚪ إضافة 4 مهارات أساسية فأكثر (الحالي: ${skillsCount})`;
+  }
+
+  // تحديث النسبة والشريط
+  const scoreBadge = document.getElementById('atsScoreText');
+  const progressFill = document.getElementById('atsProgressFill');
+
+  if (scoreBadge && progressFill) {
+    scoreBadge.textContent = `${score}%`;
+    progressFill.style.width = `${score}%`;
+
+    if (score <= 40) {
+      progressFill.style.backgroundColor = '#ef4444';
+    } else if (score < 80) {
+      progressFill.style.backgroundColor = '#f59e0b';
+    } else {
+      progressFill.style.backgroundColor = '#10b981';
+    }
+  }
+}
+
+// تفعيل الاستماع على كامل الصفحة
+document.addEventListener('input', calculateAtsScore);
+document.addEventListener('keyup', calculateAtsScore);
+document.addEventListener('change', calculateAtsScore);
+window.addEventListener('load', calculateAtsScore);
+setTimeout(calculateAtsScore, 300);
+// ==========================================
+// إدارة قسم الشهادات المهنية والدورات ديناميكياً
+// ==========================================
+let certifications = [];
+
+const certInputsList = document.getElementById('certInputsList');
+const addCertBtn = document.getElementById('addCertBtn');
+const previewCertSection = document.getElementById('previewCertSection');
+const previewCertList = document.getElementById('previewCertList');
+
+// حدث الضغط على زر إضافة شهادة
+if (addCertBtn) {
+  addCertBtn.addEventListener('click', () => {
+    certifications.push({ name: '', issuer: '', date: '' });
+    renderCertifications();
+    updateCertPreview();
+  });
+}
+
+// رسم حقول إدخال الشهادات
+function renderCertifications() {
+  if (!certInputsList) return;
+  certInputsList.innerHTML = '';
+
+  certifications.forEach((cert, index) => {
+    const item = document.createElement('div');
+    item.className = 'dynamic-item';
+    item.style.marginBottom = '12px';
+    item.style.padding = '10px';
+    item.style.border = '1px solid #e2e8f0';
+    item.style.borderRadius = '6px';
+    item.innerHTML = `
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <span style="font-weight: 600; font-size: 0.85rem; color: #475569;">شهادة / دورة ${index + 1}</span>
+        <button type="button" onclick="removeCert(${index})" style="color: #ef4444; background: none; border: none; cursor: pointer; font-size: 0.8rem; font-weight: 500;">حذف</button>
+      </div>
+      <div class="row" style="margin-bottom: 8px;">
+        <input type="text" placeholder="اسم الشهادة أو الاعتماد" value="${cert.name || ''}" oninput="updateCertField(${index}, 'name', this.value)">
+        <input type="text" placeholder="الجهة المانحة (مثال: Google, PMI)" value="${cert.issuer || ''}" oninput="updateCertField(${index}, 'issuer', this.value)">
+      </div>
+      <input type="text" placeholder="تاريخ الحصول عليها (مثال: 2024)" value="${cert.date || ''}" oninput="updateCertField(${index}, 'date', this.value)">
+    `;
+    certInputsList.appendChild(item);
+  });
+}
+
+// تحديث بيانات الشهادة عند الكتابة
+window.updateCertField = function(index, field, value) {
+  if (certifications[index]) {
+    certifications[index][field] = value;
+    updateCertPreview();
+  }
+};
+
+// حذف شهادة
+window.removeCert = function(index) {
+  certifications.splice(index, 1);
+  renderCertifications();
+  updateCertPreview();
+};
+
+// تحديث عرض الشهادات في ورقة المعاينة A4
+function updateCertPreview() {
+  if (!previewCertList || !previewCertSection) return;
+
+  const validCerts = certifications.filter(c => (c.name && c.name.trim()) || (c.issuer && c.issuer.trim()));
+  
+  if (validCerts.length === 0) {
+    previewCertSection.style.display = 'none';
+    previewCertList.innerHTML = '';
+    return;
+  }
+
+  previewCertSection.style.display = 'block';
+  previewCertList.innerHTML = validCerts.map(c => `
+    <div style="margin-bottom: 8px;">
+      <div style="display: flex; justify-content: space-between; align-items: baseline; font-weight: 600; font-size: 0.95rem;">
+        <span>${c.name || ''}</span>
+        <span style="font-size: 0.85rem; color: #64748b;">${c.date || ''}</span>
+      </div>
+      ${c.issuer ? `<div style="color: #475569; font-size: 0.88rem;">${c.issuer}</div>` : ''}
+    </div>
+  `).join('');
 }

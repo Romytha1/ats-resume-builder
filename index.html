@@ -19,8 +19,11 @@
     </div>
     <div class="actions">
       <button id="langToggleBtn" class="btn btn-secondary">English</button>
-<button id="clearBtn" type="button" onclick="clearResumeData()" class="btn btn-outline">مسح الحقول 🗑️</button>
-      <button id="loadDemoBtn" class="btn btn-outline">تعبئة نموذج تجريبي</button>
+      <button id="clearBtn" type="button" class="btn btn-outline">🗑️ مسح الكل</button>
+      <button id="loadDemoBtn" class="btn btn-outline">🪄 نموذج جاهز</button>
+      <button id="exportBtn" type="button" class="btn btn-outline">💾 حفظ نسخة</button>
+      <button id="importTriggerBtn" type="button" class="btn btn-outline">📂 استرجاع</button>
+      <input type="file" id="importInput" accept=".json" style="display: none;">
       <button id="printBtn" class="btn btn-primary">تحميل PDF 📄</button>
     </div>
   </header>
@@ -29,6 +32,24 @@
     <!-- لوحة إدخال البيانات -->
     <section class="form-section no-print">
       <div class="section-title">
+        <!-- شريط مقياس توافق الـ ATS -->
+        <div class="ats-meter-card">
+          <div class="ats-meter-header">
+            <span class="ats-meter-title">🎯 نسبة توافق السيرة مع أنظمة ATS</span>
+            <span id="atsScoreText" class="ats-score-badge">0%</span>
+          </div>
+          <div class="ats-progress-bar">
+            <div id="atsProgressFill" class="ats-progress-fill" style="width: 0%;"></div>
+          </div>
+          <ul class="ats-checklist" id="atsChecklist">
+            <li id="chk-contact" class="pending">⚪ بيانات التواصل كاملة (بريد وهاتف)</li>
+            <li id="chk-summary" class="pending">⚪ ملخص مهني واضح ومكتمل</li>
+            <li id="chk-experience" class="pending">⚪ خبرة مهنية واحدة على الأقل</li>
+            <li id="chk-education" class="pending">⚪ المؤهل الأكاديمي والتعليمي</li>
+            <li id="chk-skills" class="pending">⚪ إضافة 4 مهارات أساسية فأكثر</li>
+          </ul>
+        </div>
+
         <h3 id="formTitle">البيانات والمعلومات</h3>
         <p id="formSub">اكتب بياناتك وستظهر بالمعاينة مباشرة وفق معايير أنظمة التوظيف ATS</p>
       </div>
@@ -53,7 +74,6 @@
         <h4 id="lblSummary">الملخص المهني</h4>
         <textarea id="inpSummary" rows="3" placeholder="ملخص مهني موجز يبرز خبراتك وأهم مهاراتك..."></textarea>
       </div>
-      
 
       <!-- الخبرات المهنية -->
       <div class="form-group-block">
@@ -71,6 +91,15 @@
           <button type="button" id="addEduBtn" class="btn-sm">+ إضافة مؤهل</button>
         </div>
         <div id="educationInputsList"></div>
+      </div>
+
+      <!-- الشهادات المهنية والدورات -->
+      <div class="form-group-block">
+        <div class="block-header">
+          <h4 id="lblCertifications">الشهادات المهنية والدورات</h4>
+          <button type="button" id="addCertBtn" class="btn-sm">+ إضافة شهادة</button>
+        </div>
+        <div id="certInputsList"></div>
       </div>
 
       <!-- المهارات -->
@@ -91,7 +120,7 @@
             <span id="cvEmail">email@example.com</span>
             <span id="cvPhoneSep"> • </span><span id="cvPhone">+966 50 000 0000</span>
             <span id="cvLocationSep"> • </span><span id="cvLocation">المدينة، الدولة</span>
-            <span id="cvLinkSep"> • </span><span id="cvLink">linkedin.com/in/username</span>
+            <span id="cvLinkSep"> • </span><span id="cvLink">LinkedIn</span>
           </div>
         </div>
 
@@ -114,6 +143,13 @@
           <h2 class="cv-section-title" id="cvHeadingEdu">التعليم</h2>
           <div class="cv-divider"></div>
           <div id="cvEduList"></div>
+        </div>
+
+        <!-- الشهادات المهنية والدورات -->
+        <div class="cv-section" id="previewCertSection" style="display: none;">
+          <h2 class="cv-section-title" id="prevCertHeading">الشهادات والدورات</h2>
+          <div class="cv-divider"></div>
+          <div id="previewCertList"></div>
         </div>
 
         <!-- المهارات -->
