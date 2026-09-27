@@ -403,39 +403,78 @@ textarea:focus {
 }
 
 /* ===================================================
-   إعدادات تصدير وطباعة الـ PDF
+   إعدادات تصدير وطباعة الـ PDF النظيفة
    =================================================== */
-@media print {
-  body {
-    background: none;
-  }
-  .no-print {
-    display: none !important;
-  }
-  .app-container {
-    height: auto;
-    overflow: visible;
-  }
-  .preview-section {
-    width: 100%;
-    padding: 0;
-    background: none;
-  }
-  .a4-sheet {
-    box-shadow: none;
-    padding: 0;
-    margin: 0;
-    width: 100%;
-  }
-  @page {
-    size: A4;
-    margin: 15mm;
-  }
+@page {
+  size: A4 portrait;
+  margin: 12mm 15mm; /* هوامش متناسقة تملأ الصفحة بدون إطارات غريبة */
 }
 
-/* ===================================================
+@media print {
+  html, body {
+    width: 210mm !important;
+    height: auto !important;
+    background: #ffffff !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* إخفاء كل أدوات الموقع والشاشات */
+  .no-print,
+  .app-header,
+  .form-section,
+  .ats-meter-card {
+    display: none !important;
+  }
+
+  .app-container {
+    display: block !important;
+    height: auto !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .preview-section {
+    display: block !important;
+    width: 100% !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+  }
+
+  /* ورقة الـ A4 بدون ظلال وبدون تصغير وبأبعاد نظيفة */
+  .a4-sheet {
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    min-height: auto !important;
+    background: transparent !important;
+    font-size: 10pt !important;
+    line-height: 1.5 !important;
+  }
+
+  /* منع انقطاع عناصر الخبرة أو التعليم في منتصف الورقة بين الصفحات */
+  .cv-exp-item,
+  .cv-edu-item,
+  .cv-section {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    margin-bottom: 1rem !important;
+  }
+
+  /* ضبط المسافات بين النقاط لمنع التكدس */
+  .cv-bullets li {
+    margin-bottom: 0.3rem !important;
+    line-height: 1.4 !important;
+  }
+  /* ===================================================
    إعدادات شاشات الجوال والأجهزة اللوحية
    =================================================== */
+   }
 @media screen and (max-width: 900px) {
   .app-header {
     display: flex !important;
@@ -495,7 +534,8 @@ textarea:focus {
     display: flex !important;
     justify-content: center !important;
   }
-.a4-sheet {
+
+  .a4-sheet {
     width: 100% !important;
     min-width: unset !important;
     max-width: 100% !important;
