@@ -314,33 +314,6 @@ textarea:focus {
   margin-bottom: 0.15rem;
 }
 
-@media print {
-  body {
-    background: none;
-  }
-  .no-print {
-    display: none !important;
-  }
-  .app-container {
-    height: auto;
-    overflow: visible;
-  }
-  .preview-section {
-    width: 100%;
-    padding: 0;
-    background: none;
-  }
-  .a4-sheet {
-    box-shadow: none;
-    padding: 0;
-    margin: 0;
-    width: 100%;
-  }
-  @page {
-    size: A4;
-    margin: 15mm;
-  }
-}
 /* --- بطاقة مقياس توافق الـ ATS --- */
 .ats-meter-card {
   background: #f8fafc;
@@ -407,20 +380,11 @@ textarea:focus {
   color: #16a34a;
   font-weight: 500;
 }
-/* منع خروج الروابط والنصوص الطويلة عن حدود الصفحة */
-.resume-preview, .resume-preview * {
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  word-break: break-word;
-}
-/* منع تشوه الصفحة والروابط الطويلة */
-.preview-header, .resume-preview, .resume-preview * {
-  word-break: break-all;
-  overflow-wrap: anywhere;
-}
-/* ضبط توازن المعاينة ومنع تمدد النصوص الطويلة */
+
+/* --- منع انكسار وخروج الروابط والنصوص الطويلة --- */
 .preview-header, 
 .resume-preview,
+.resume-preview *,
 .resume-preview p,
 .resume-preview a,
 .resume-preview span {
@@ -437,75 +401,124 @@ textarea:focus {
   gap: 8px;
   line-height: 1.6;
 }
+
 /* ===================================================
-   تحسين التجاوب مع شاشات الجوال والأجهزة اللوحية
+   إعدادات تصدير وطباعة الـ PDF
    =================================================== */
-@media (max-width: 900px) {
-  /* 1. ضبط الشريط العلوي والأزرار لمنع الانضغاط أو انكسار الكلمات */
-  .app-header {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.75rem;
-    padding: 0.75rem 1rem;
+@media print {
+  body {
+    background: none;
   }
-
-  .logo {
-    justify-content: center;
+  .no-print {
+    display: none !important;
   }
-
-  .actions {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.4rem;
-  }
-
-  .actions .btn {
-    flex: 1 1 auto;
-    padding: 0.45rem 0.6rem;
-    font-size: 0.75rem;
-    white-space: nowrap;
-    text-align: center;
-  }
-
-  /* 2. تحويل الحاوية الرئيسية إلى ترتيب عمودي وتفعيل التمرير الكامل */
   .app-container {
-    flex-direction: column;
     height: auto;
     overflow: visible;
   }
-
-  /* 3. جعل قسم النموذج يمتد بكامل عرض الشاشة */
-  .form-section {
-    width: 100%;
-    overflow-y: visible;
-    padding: 1.25rem 1rem;
-    border-left: none;
-    border-right: none;
-    border-bottom: 1px solid var(--border-color);
-  }
-
-  [dir="ltr"] .form-section {
-    border-right: none;
-  }
-
-  /* 4. تنسيق قسم المعاينة وورقة السيرة لتناسب شاشة الهاتف */
   .preview-section {
     width: 100%;
-    overflow-x: auto;
-    padding: 1.5rem 0.75rem;
+    padding: 0;
+    background: none;
   }
-
   .a4-sheet {
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
     width: 100%;
-    min-height: auto;
-    padding: 15mm 10mm;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  @page {
+    size: A4;
+    margin: 15mm;
+  }
+}
+
+/* ===================================================
+   إعدادات شاشات الجوال والأجهزة اللوحية
+   =================================================== */
+@media screen and (max-width: 900px) {
+  .app-header {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    padding: 10px !important;
+    gap: 10px !important;
+    height: auto !important;
   }
 
-  /* 5. جعل حقول الإدخال المتجاورة تترتب عمودياً عند ضيق المساحة */
+  .logo {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+  }
+
+  .actions {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    width: 100% !important;
+  }
+
+  .actions .btn {
+    flex: 1 1 30% !important;
+    min-width: 80px !important;
+    padding: 8px 4px !important;
+    font-size: 0.75rem !important;
+    text-align: center !important;
+  }
+
+  .app-container {
+    display: flex !important;
+    flex-direction: column !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .form-section {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+    padding: 15px !important;
+    border: none !important;
+  }
+
+  .preview-section {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    overflow-x: hidden !important;
+    padding: 15px 10px !important;
+    background-color: #334155 !important;
+    display: flex !important;
+    justify-content: center !important;
+  }
+.a4-sheet {
+    width: 100% !important;
+    min-width: unset !important;
+    max-width: 100% !important;
+    aspect-ratio: 1 / 1.414 !important;
+    min-height: 500px !important;
+    padding: 20px 16px !important;
+    box-sizing: border-box !important;
+    background: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
+    font-size: 10pt !important;
+    overflow-y: visible !important;
+  }
+
+  .cv-header h1 {
+    font-size: 18pt !important;
+  }
+  
+  .cv-section-title {
+    font-size: 13pt !important;
+  }
+
   .row {
-    flex-direction: column;
-    gap: 0;
+    flex-direction: column !important;
+    gap: 0 !important;
   }
 }
