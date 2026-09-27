@@ -437,3 +437,75 @@ textarea:focus {
   gap: 8px;
   line-height: 1.6;
 }
+/* ===================================================
+   تحسين التجاوب مع شاشات الجوال والأجهزة اللوحية
+   =================================================== */
+@media (max-width: 900px) {
+  /* 1. ضبط الشريط العلوي والأزرار لمنع الانضغاط أو انكسار الكلمات */
+  .app-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .logo {
+    justify-content: center;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.4rem;
+  }
+
+  .actions .btn {
+    flex: 1 1 auto;
+    padding: 0.45rem 0.6rem;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    text-align: center;
+  }
+
+  /* 2. تحويل الحاوية الرئيسية إلى ترتيب عمودي وتفعيل التمرير الكامل */
+  .app-container {
+    flex-direction: column;
+    height: auto;
+    overflow: visible;
+  }
+
+  /* 3. جعل قسم النموذج يمتد بكامل عرض الشاشة */
+  .form-section {
+    width: 100%;
+    overflow-y: visible;
+    padding: 1.25rem 1rem;
+    border-left: none;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  [dir="ltr"] .form-section {
+    border-right: none;
+  }
+
+  /* 4. تنسيق قسم المعاينة وورقة السيرة لتناسب شاشة الهاتف */
+  .preview-section {
+    width: 100%;
+    overflow-x: auto;
+    padding: 1.5rem 0.75rem;
+  }
+
+  .a4-sheet {
+    width: 100%;
+    min-height: auto;
+    padding: 15mm 10mm;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  /* 5. جعل حقول الإدخال المتجاورة تترتب عمودياً عند ضيق المساحة */
+  .row {
+    flex-direction: column;
+    gap: 0;
+  }
+}
