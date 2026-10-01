@@ -41,7 +41,7 @@
   <header class="app-header no-print">
     <div class="logo">
       <span class="badge">ATS-Friendly</span>
-      <h2>منشئ السيرة الذاتية المهني</h2>
+<h2 style="font-weight: 800; letter-spacing: -0.5px;">Smart ATS</h2>
     </div>
     <div class="actions">
       <button id="langToggleBtn" class="btn btn-secondary">English</button>
@@ -61,7 +61,7 @@
         <!-- شريط مقياس توافق الـ ATS -->
         <div class="ats-meter-card">
           <div class="ats-meter-header">
-            <span class="ats-meter-title">🎯 نسبة توافق السيرة مع أنظمة ATS</span>
+<span class="ats-meter-title" id="lblAtsScoreTitle">🎯 نسبة توافق السيرة مع أنظمة ATS</span>
             <span id="atsScoreText" class="ats-score-badge">0%</span>
           </div>
           <div class="ats-progress-bar">
@@ -77,7 +77,6 @@
         </div>
 
         <h3 id="formTitle">البيانات والمعلومات</h3>
-        <p id="formSub">اكتب بياناتك وستظهر بالمعاينة مباشرة وفق معايير أنظمة التوظيف ATS</p>
       </div>
 
       <!-- البيانات الشخصية -->
@@ -137,6 +136,7 @@
 
     <!-- المعاينة الحية لورقة الـ A4 -->
     <section class="preview-section">
+      
       <div class="a4-sheet" id="cvPaper">
         <!-- ترويسة الـ CV -->
         <div class="cv-header">
@@ -186,50 +186,55 @@
         </div>
       </div>
     </section>
-  </main>
 </main>
-<!-- قسم المشاركة السريعة المتكامل -->
-  <div class="no-print" style="text-align: center; margin: 30px auto; padding: 22px; background: #f8fafc; border-radius: 12px; max-width: 650px; border: 1px dashed #cbd5e1;">
-    <h3 style="margin-bottom: 8px; color: #1e293b; font-size: 1.05rem;">أعجبتك الأداة؟ شاركها مع زملائك والباحثين عن عمل 🚀</h3>
-    <p style="margin-bottom: 16px; color: #64748b; font-size: 0.9rem;">ساعد غيرك في بناء سيرة ذاتية تتجاوز فلاتر التوظيف بسهولة</p>
-    
-    <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
-      <!-- زر واتساب -->
-      <a href="https://api.whatsapp.com/send?text=لقيت%20هذه%20الأداة%20الرهيبة%20لبناء%20وفحص%20السيرة%20الذاتية%20لتتوافق%20100%25%20مع%20أنظمة%20التوظيف%20ATS%20مجاناً:%20https://smartatscv.com" 
-         target="_blank" 
-         style="display: inline-flex; align-items: center; gap: 6px; background-color: #25D366; color: white; padding: 9px 16px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 13px;">
-        واتساب
-      </a>
 
-      <!-- زر منصة X -->
-      <a href="https://twitter.com/intent/tweet?text=أداة%20ممتازة%20لبناء%20وفحص%20السيرة%20الذاتية%20لتتوافق%20مع%20أنظمة%20التوظيف%20ATS%20بشكل%20مجاني%20🎯&url=https://smartatscv.com" 
-         target="_blank" 
-         style="display: inline-flex; align-items: center; gap: 6px; background-color: #0f1419; color: white; padding: 9px 16px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 13px;">
-        منصة X
-      </a>
 
-      <!-- زر لينكد إن -->
-      <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://smartatscv.com" 
-         target="_blank" 
-         style="display: inline-flex; align-items: center; gap: 6px; background-color: #0a66c2; color: white; padding: 9px 16px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 13px;">
-        لينكد إن
-      </a>
 
-      <!-- زر نسخ الرابط -->
-      <button onclick="navigator.clipboard.writeText('https://smartatscv.com'); this.innerText='تم النسخ! ✓'; setTimeout(() => this.innerText='نسخ الرابط 📋', 2000);" 
-              style="display: inline-flex; align-items: center; gap: 6px; background-color: #ffffff; color: #334155; border: 1px solid #cbd5e1; padding: 9px 16px; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer;">
-        نسخ الرابط 📋
-      </button>
+  <!-- الفوتر -->
+<!-- فوتر أنيق ومدمج مع أزرار المشاركة -->
+  <footer class="no-print" style="margin-top: 60px; padding: 40px 20px 24px; border-top: 1px solid #e2e8f0; background: #ffffff; text-align: center;">
+    <div style="max-width: 600px; margin: 0 auto 20px auto;">
+      <h4 id="shareTitle" style="margin: 0 0 6px 0; color: #1e293b; font-size: 0.95rem; font-weight: 600;">🚀 أعجبتك الأداة؟ شاركها مع زملائك والباحثين عن عمل</h4>
+      <p id="shareSub" style="margin: 0 0 16px 0; color: #64748b; font-size: 0.85rem;">ساعد غيرك في بناء سيرة ذاتية تتجاوز فلاتر التوظيف بسهولة</p>
+      
+      <div style="display: flex; justify-content: center; align-items: center; gap: 8px; flex-wrap: wrap;">
+        <!-- واتساب -->
+        <a href="https://api.whatsapp.com/send?text=أداة%20ممتازة%20لبناء%20وفحص%20السيرة%20الذاتية%20لتتوافق%20مع%20أنظمة%20التوظيف%20ATS%20بشكل%20مجاني%20🎯%20https://smartatscv.com" 
+           target="_blank" 
+           style="display: inline-flex; align-items: center; gap: 5px; background-color: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; padding: 6px 14px; border-radius: 20px; text-decoration: none; font-size: 12px; font-weight: 600;">
+          <span id="lblShareWhatsapp">واتساب</span>
+        </a>
+
+        <!-- منصة X -->
+        <a href="https://twitter.com/intent/tweet?text=أداة%20ممتازة%20لبناء%20وفحص%20السيرة%20الذاتية%20لتتوافق%20مع%20أنظمة%20التوظيف%20ATS%20بشكل%20مجاني%20🎯&url=https://smartatscv.com" 
+           target="_blank" 
+           style="display: inline-flex; align-items: center; gap: 5px; background-color: #f8fafc; color: #0f1419; border: 1px solid #e2e8f0; padding: 6px 14px; border-radius: 20px; text-decoration: none; font-size: 12px; font-weight: 600;">
+          <span id="lblShareX">منصة X</span>
+        </a>
+
+        <!-- لينكد إن -->
+        <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://smartatscv.com" 
+           target="_blank" 
+           style="display: inline-flex; align-items: center; gap: 5px; background-color: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; padding: 6px 14px; border-radius: 20px; text-decoration: none; font-size: 12px; font-weight: 600;">
+          <span id="lblShareLinkedin">لينكد إن</span>
+        </a>
+
+        <!-- نسخ الرابط -->
+        <button onclick="navigator.clipboard.writeText('https://smartatscv.com'); this.innerText='تم النسخ! ✅'; setTimeout(() => this.innerText='نسخ الرابط', 2000)"
+                style="display: inline-flex; align-items: center; gap: 5px; background-color: #f8fafc; color: #475569; border: 1px solid #cbd5e1; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer;">
+          📋 <span id="lblCopyLink">نسخ الرابط</span>
+        </button>
+      </div>
     </div>
-  </div>
-  <footer class="no-print" style="text-align: center; padding: 25px 10px; color: #64748b; font-size: 0.85rem;">
-    <p>© 2026 Smart ATS CV Builder - جميع الحقوق محفوظة</p>
-    <p style="margin-top: 6px;">
-      <a href="privacy.html" style="color: #2563eb; text-decoration: none;">سياسة الخصوصية وشروط الاستخدام</a>
-    </p>
+
+    <!-- الحقوق والخصوصية -->
+    <div style="font-size: 0.8rem; color: #94a3b8; border-top: 1px solid #f1f5f9; padding-top: 16px;">
+      <p id="footerRights" style="margin: 0 0 6px 0;">جميع الحقوق محفوظة - 2026 Smart ATS CV Builder ©</p>
+      <a id="footerPrivacy" href="privacy.html" style="color: #64748b; text-decoration: none;">سياسة الخصوصية وشروط الاستخدام</a>
+    </div>
   </footer>
 
 
-  <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>

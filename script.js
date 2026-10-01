@@ -408,8 +408,12 @@ function loadAllData() {
 // ==========================================
 // 6. احتساب نقاط توافق الـ ATS لحظياً
 // ==========================================
+// ==========================================
+// 6. احتساب نقاط توافق الـ ATS لحظياً
+// ==========================================
 function calculateAtsScore() {
   let score = 0;
+  const isAr = currentLang === 'ar';
 
   // 1. بيانات التواصل
   const emailVal = inpEmail ? inpEmail.value.trim() : '';
@@ -418,72 +422,72 @@ function calculateAtsScore() {
   const hasPhone = phoneVal.length >= 8;
 
   const chkContact = document.getElementById('chk-contact');
-  if (hasEmail && hasPhone) {
-    score += 20;
-    if (chkContact) {
+  if (chkContact) {
+    if (hasEmail && hasPhone) {
+      score += 20;
       chkContact.className = 'done';
-      chkContact.textContent = '✅ بيانات التواصل كاملة (بريد وهاتف)';
+      chkContact.textContent = isAr ? '✅ بيانات التواصل كاملة (بريد وهاتف)' : '✅ Complete contact details (email & phone)';
+    } else {
+      chkContact.className = 'pending';
+      chkContact.textContent = isAr ? '⚪ بيانات التواصل كاملة (بريد وهاتف)' : '⚪ Complete contact details (email & phone)';
     }
-  } else if (chkContact) {
-    chkContact.className = 'pending';
-    chkContact.textContent = '⚪ بيانات التواصل كاملة (بريد وهاتف)';
   }
 
   // 2. الملخص المهني
   const summaryVal = inpSummary ? inpSummary.value.trim() : '';
   const chkSummary = document.getElementById('chk-summary');
-  if (summaryVal.length >= 35) {
-    score += 20;
-    if (chkSummary) {
+  if (chkSummary) {
+    if (summaryVal.length >= 35) {
+      score += 20;
       chkSummary.className = 'done';
-      chkSummary.textContent = '✅ ملخص مهني واضح ومكتمل';
+      chkSummary.textContent = isAr ? '✅ ملخص مهني واضح ومكتمل' : '✅ Clear professional summary';
+    } else {
+      chkSummary.className = 'pending';
+      chkSummary.textContent = isAr ? '⚪ ملخص مهني واضح ومكتمل' : '⚪ Clear professional summary';
     }
-  } else if (chkSummary) {
-    chkSummary.className = 'pending';
-    chkSummary.textContent = '⚪ ملخص مهني واضح ومكتمل';
   }
 
   // 3. الخبرة المهنية
   const hasExp = experiences.some(e => (e.role && e.role.trim().length > 2) || (e.company && e.company.trim().length > 2));
   const chkExp = document.getElementById('chk-experience');
-  if (hasExp) {
-    score += 20;
-    if (chkExp) {
+  if (chkExp) {
+    if (hasExp) {
+      score += 20;
       chkExp.className = 'done';
-      chkExp.textContent = '✅ خبرة مهنية واحدة على الأقل';
+      chkExp.textContent = isAr ? '✅ خبرة مهنية واحدة على الأقل' : '✅ At least one work experience';
+    } else {
+      chkExp.className = 'pending';
+      chkExp.textContent = isAr ? '⚪ خبرة مهنية واحدة على الأقل' : '⚪ At least one work experience';
     }
-  } else if (chkExp) {
-    chkExp.className = 'pending';
-    chkExp.textContent = '⚪ خبرة مهنية واحدة على الأقل';
   }
 
   // 4. التعليم
   const hasEdu = educations.some(e => (e.degree && e.degree.trim().length > 2) || (e.school && e.school.trim().length > 2));
   const chkEdu = document.getElementById('chk-education');
-  if (hasEdu) {
-    score += 20;
-    if (chkEdu) {
+  if (chkEdu) {
+    if (hasEdu) {
+      score += 20;
       chkEdu.className = 'done';
-      chkEdu.textContent = '✅ المؤهل الأكاديمي والتعليمي';
+      chkEdu.textContent = isAr ? '✅ المؤهل الأكاديمي والتعليمي' : '✅ Academic education & degree';
+    } else {
+      chkEdu.className = 'pending';
+      chkEdu.textContent = isAr ? '⚪ المؤهل الأكاديمي والتعليمي' : '⚪ Academic education & degree';
     }
-  } else if (chkEdu) {
-    chkEdu.className = 'pending';
-    chkEdu.textContent = '⚪ المؤهل الأكاديمي والتعليمي';
   }
 
   // 5. المهارات
   const skillsVal = inpSkills ? inpSkills.value.trim() : '';
   const skillsCount = skillsVal ? skillsVal.split(/[\n,،]+/).filter(s => s.trim().length > 0).length : 0;
   const chkSkills = document.getElementById('chk-skills');
-  if (skillsCount >= 4) {
-    score += 20;
-    if (chkSkills) {
+  if (chkSkills) {
+    if (skillsCount >= 4) {
+      score += 20;
       chkSkills.className = 'done';
-      chkSkills.textContent = `✅ إضافة 4 مهارات أساسية فأكثر (${skillsCount} حالياً)`;
+      chkSkills.textContent = isAr ? `✅ إضافة 4 مهارات أساسية فأكثر (${skillsCount} حالياً)` : `✅ 4+ core skills included (${skillsCount} currently)`;
+    } else {
+      chkSkills.className = 'pending';
+      chkSkills.textContent = isAr ? `⚪ إضافة 4 مهارات أساسية فأكثر (الحالي: ${skillsCount})` : `⚪ 4+ core skills included (currently: ${skillsCount})`;
     }
-  } else if (chkSkills) {
-    chkSkills.className = 'pending';
-    chkSkills.textContent = `⚪ إضافة 4 مهارات أساسية فأكثر (الحالي: ${skillsCount})`;
   }
 
   // تحديث الشريط الرقمي واللون
@@ -501,9 +505,7 @@ function calculateAtsScore() {
       progressFill.style.backgroundColor = '#10b981';
     }
   }
-}
-
-// ==========================================
+}// ==========================================
 // 7. مسح وتعبئة النموذج التجريبي
 // ==========================================
 if (clearBtn) {
@@ -608,41 +610,90 @@ if (loadDemoBtn) {
 const translations = {
   ar: {
     toggleBtn: 'English',
-    loadDemo: 'تعبئة نموذج تجريبي',
-    clearBtn: 'مسح الحقول 🗑️',
+    loadDemo: 'نموذج جاهز',
+    clearBtn: 'مسح الكل 🗑️',
     print: 'تحميل PDF 📄',
+    saveBtn: 'حفظ نسخة 💾',
+    restoreBtn: 'استرجاع 📂',
     formTitle: 'البيانات والمعلومات',
     formSub: 'اكتب بياناتك وستظهر بالمعاينة مباشرة وفق معايير أنظمة التوظيف ATS',
     lblPersonal: 'البيانات الشخصية',
     lblSummary: 'الملخص المهني',
     lblExp: 'الخبرات المهنية',
     lblEdu: 'التعليم والمؤهلات',
+    lblCerts: 'الشهادات المهنية والدورات',
     lblSkills: 'المهارات والكلمات المفتاحية',
     addExp: '+ إضافة خبرة',
     addEdu: '+ إضافة مؤهل',
+    addCert: '+ إضافة شهادة',
     headSummary: 'الملخص المهني',
-    headExp: 'الخبرات العملية',
+    headExp: 'الخبرات المهنية',
     headEdu: 'التعليم',
-    headSkills: 'المهارات التقنية'
+    headCerts: 'الشهادات والدورات',
+    headSkills: 'المهارات التقنية',
+    phName: 'الاسم الكامل',
+    phTitle: 'المسمى الوظيفي المستهدف',
+    phEmail: 'البريد الإلكتروني',
+    phPhone: 'رقم الجوال',
+    phLocation: 'المدينة، الدولة',
+    phLink: 'رابط لينكدإن أو الموقع',
+    phSummary: 'ملخص مهني موجز يبرز خبراتك وأهم مهاراتك...',
+    phSkills: 'افصل بين كل مهارة بفاصلة (مثال: HTML, CSS, JavaScript, UI Design, Git)',
+    shareTitle: '🚀 أعجبتك الأداة؟ شاركها مع زملائك والباحثين عن عمل',
+    shareSub: 'ساعد غيرك في بناء سيرة ذاتية تتجاوز فلاتر التوظيف بسهولة',
+    copyLink: 'نسخ الرابط',
+    shareLinkedin: 'لينكد إن',
+    shareX: 'منصة X',
+    shareWhatsapp: 'واتساب',
+    shareTitle: '🚀 أعجبتك الأداة؟ شاركها مع زملائك والباحثين عن عمل',
+    shareSub: 'ساعد غيرك في بناء سيرة ذاتية تتجاوز فلاتر التوظيف بسهولة',
+    copyLink: 'نسخ الرابط',
+    shareLinkedin: 'لينكد إن',
+    shareX: 'منصة X',
+    shareWhatsapp: 'واتساب',
+    footerRights: 'جميع الحقوق محفوظة - 2026 Smart ATS CV Builder ©',
+    footerPrivacy: 'سياسة الخصوصية وشروط الاستخدام'
   },
   en: {
     toggleBtn: 'العربية',
     loadDemo: 'Load Demo Data',
     clearBtn: 'Clear Fields 🗑️',
     print: 'Download PDF 📄',
+    saveBtn: 'Save Backup 💾',
+    restoreBtn: 'Restore 📂',
     formTitle: 'Resume Information',
     formSub: 'Fill in your details and view the live preview formatted for ATS systems',
     lblPersonal: 'Personal Information',
     lblSummary: 'Professional Summary',
     lblExp: 'Work Experience',
     lblEdu: 'Education',
+    lblCerts: 'Certifications & Courses',
     lblSkills: 'Key Skills',
     addExp: '+ Add Experience',
     addEdu: '+ Add Education',
-    headSummary: 'PROFESSIONAL SUMMARY',
-    headExp: 'WORK EXPERIENCE',
-    headEdu: 'EDUCATION',
-    headSkills: 'TECHNICAL & CORE SKILLS'
+    addCert: '+ Add Certification',
+    headSummary: 'Professional Summary',
+    headExp: 'Work Experience',
+    headEdu: 'Education',
+    headCerts: 'Certifications',
+    headSkills: 'Technical Skills',
+    phName: 'Full Name',
+    phTitle: 'Target Job Title',
+    phEmail: 'Email Address',
+    phPhone: 'Phone Number',
+    phLocation: 'City, Country',
+    phLink: 'LinkedIn or Portfolio Link',
+    phSummary: 'Brief professional summary highlighting your expertise and core strengths...',
+    phSkills: 'Separate each skill with a comma (e.g. HTML, CSS, JavaScript, UI Design, Git)',
+    shareTitle: '🚀 Liked the tool? Share it with your peers and job seekers',
+    shareSub: 'Help others build an ATS-friendly resume and land interviews easily',
+    copyLink: 'Copy Link',
+    shareLinkedin: 'LinkedIn',
+    shareX: 'X (Twitter)',
+    shareWhatsapp: 'WhatsApp',
+    footerRights: 'All Rights Reserved - 2026 Smart ATS CV Builder ©',
+    footerPrivacy: 'Privacy Policy & Terms of Use'
+
   }
 };
 
@@ -666,7 +717,10 @@ if (langToggleBtn) {
     if (printBtn) printBtn.textContent = t.print;
     if (addExpBtn) addExpBtn.textContent = t.addExp;
     if (addEduBtn) addEduBtn.textContent = t.addEdu;
-    
+
+    const atsTitleEl = document.getElementById('lblAtsScoreTitle');
+    if (atsTitleEl) atsTitleEl.textContent = currentLang === 'ar' ? '🎯 نسبة توافق السيرة مع أنظمة ATS' : '🎯 ATS Compatibility Score';
+
     const formTitleEl = document.getElementById('formTitle');
     const formSubEl = document.getElementById('formSub');
     const lblPersonalEl = document.getElementById('lblPersonalInfo');
@@ -691,13 +745,53 @@ if (langToggleBtn) {
     if (cvHeadEdu) cvHeadEdu.textContent = t.headEdu;
     if (cvHeadSkills) cvHeadSkills.textContent = t.headSkills;
 
+    // ترجمة الأزرار الإضافية والشهادات
+    const exportBtnEl = document.getElementById('exportBtn');
+    if (exportBtnEl) exportBtnEl.textContent = t.saveBtn;
+    const importBtnEl = document.getElementById('importTriggerBtn');
+    if (importBtnEl) importBtnEl.textContent = t.restoreBtn;
+
+    const lblCertsEl = document.getElementById('lblCertifications');
+    if (lblCertsEl) lblCertsEl.textContent = t.lblCerts;
+    const addCertEl = document.getElementById('addCertBtn');
+    if (addCertEl) addCertEl.textContent = t.addCert;
+    const cvHeadCertsEl = document.getElementById('cvHeadingCertifications');
+    if (cvHeadCertsEl) cvHeadCertsEl.textContent = t.headCerts;
+
+    // ترجمة الحقول الإرشادية (Placeholders)
+    const setPh = (id, text) => {
+      const el = document.getElementById(id);
+      if (el) el.placeholder = text;
+    };
+    setPh('inpName', t.phName);
+    setPh('inpTitle', t.phTitle);
+    setPh('inpEmail', t.phEmail);
+    setPh('inpPhone', t.phPhone);
+    setPh('inpLocation', t.phLocation);
+    setPh('inpLink', t.phLink);
+    setPh('inpSummary', t.phSummary);
+    setPh('inpSkills', t.phSkills);
+const setText = (id, text) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = text;
+    };
+
+    setText('shareTitle', t.shareTitle);
+    setText('shareSub', t.shareSub);
+    setText('lblCopyLink', t.copyLink);
+    setText('lblShareLinkedin', t.shareLinkedin);
+    setText('lblShareX', t.shareX);
+    setText('lblShareWhatsapp', t.shareWhatsapp);
+    setText('footerRights', t.footerRights);
+    setText('footerPrivacy', t.footerPrivacy);
+    // إعادة رسم بطاقات الإدخال والمعاينة ونقاط الفحص باللغة الجديدة فوراً
     updatePersonalInfo();
     renderExperiences();
     renderEducation();
-    saveAllData();
+    renderCertifications();
+    calculateAtsScore();
   });
 }
-
 // ==========================================
 // 9. الطباعة
 // ==========================================
