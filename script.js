@@ -1,3 +1,8 @@
+// تنظيف أي نص قبل إدخاله في innerHTML (منع XSS وكسر الحقول)
+function esc(v) {
+  return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
 // الحقول الأساسية
 const inpName = document.getElementById('inpName');
 const inpTitle = document.getElementById('inpTitle');
@@ -70,7 +75,7 @@ function updatePersonalInfo() {
     if (link) {
       const formattedUrl = link.startsWith('http') ? link : `https://${link}`;
       const label = link.toLowerCase().includes('linkedin') ? 'LinkedIn' : (currentLang === 'ar' ? 'الموقع المهني' : 'Portfolio');
-      cvLink.innerHTML = `<a href="${formattedUrl}" target="_blank" style="color: inherit; text-decoration: underline;">${label}</a>`;
+      cvLink.innerHTML = `<a href="${esc(formattedUrl)}" rel="noopener noreferrer" target="_blank" style="color: inherit; text-decoration: underline;">${label}</a>`;
     } else {
       cvLink.innerHTML = '';
     }
@@ -126,12 +131,12 @@ function renderExperiences() {
         <span style="font-size:0.8rem; font-weight:600; color:var(--text-muted);">${currentLang === 'ar' ? 'خبرة ' + (idx + 1) : 'Experience ' + (idx + 1)}</span>
         <button type="button" class="btn-delete" onclick="removeExp(${idx})">${currentLang === 'ar' ? 'حذف' : 'Remove'}</button>
       </div>
-      <input type="text" placeholder="${currentLang === 'ar' ? 'المسمى الوظيفي' : 'Job Title'}" value="${exp.role || ''}" oninput="updateExpData(${idx}, 'role', this.value)">
+      <input type="text" placeholder="${currentLang === 'ar' ? 'المسمى الوظيفي' : 'Job Title'}" value="${esc(exp.role)}" oninput="updateExpData(${idx}, 'role', this.value)">
       <div class="row">
-        <input type="text" placeholder="${currentLang === 'ar' ? 'اسم الشركة' : 'Company Name'}" value="${exp.company || ''}" oninput="updateExpData(${idx}, 'company', this.value)">
-        <input type="text" placeholder="${currentLang === 'ar' ? 'الفترة (مثال: 2023 - الحالي)' : 'Dates (e.g. 2023 - Present)'}" value="${exp.dates || ''}" oninput="updateExpData(${idx}, 'dates', this.value)">
+        <input type="text" placeholder="${currentLang === 'ar' ? 'اسم الشركة' : 'Company Name'}" value="${esc(exp.company)}" oninput="updateExpData(${idx}, 'company', this.value)">
+        <input type="text" placeholder="${currentLang === 'ar' ? 'الفترة (مثال: 2023 - الحالي)' : 'Dates (e.g. 2023 - Present)'}" value="${esc(exp.dates)}" oninput="updateExpData(${idx}, 'dates', this.value)">
       </div>
-      <textarea rows="3" placeholder="${currentLang === 'ar' ? 'الإنجازات والمهام (افصل بينها بسطر جديد)...' : 'Responsibilities & achievements (one per line)...'}" oninput="updateExpData(${idx}, 'desc', this.value)">${exp.desc || ''}</textarea>
+      <textarea rows="3" placeholder="${currentLang === 'ar' ? 'الإنجازات والمهام (افصل بينها بسطر جديد)...' : 'Responsibilities & achievements (one per line)...'}" oninput="updateExpData(${idx}, 'desc', this.value)">${esc(exp.desc)}</textarea>
     `;
     expInputsContainer.appendChild(card);
   });
@@ -172,17 +177,17 @@ function renderExpPreviewOnly() {
     if (exp.role || exp.company || exp.desc) {
       hasValid = true;
       const bullets = (exp.desc || '').split('\n').filter(b => b.trim() !== '');
-      const bulletsHtml = bullets.map(b => `<li>${b}</li>`).join('');
+      const bulletsHtml = bullets.map(b => `<li>${esc(b)}</li>`).join('');
 
       const item = document.createElement('div');
       item.className = 'cv-exp-item';
       item.innerHTML = `
         <div class="cv-item-header">
-          <span>${exp.company || ''}</span>
-          <span>${exp.dates || ''}</span>
+          <span>${esc(exp.company)}</span>
+          <span>${esc(exp.dates)}</span>
         </div>
         <div class="cv-item-sub">
-          <span>${exp.role || ''}</span>
+          <span>${esc(exp.role)}</span>
         </div>
         ${bullets.length > 0 ? `<ul class="cv-bullets">${bulletsHtml}</ul>` : ''}
       `;
@@ -209,10 +214,10 @@ function renderEducation() {
         <span style="font-size:0.8rem; font-weight:600; color:var(--text-muted);">${currentLang === 'ar' ? 'مؤهل ' + (idx + 1) : 'Degree ' + (idx + 1)}</span>
         <button type="button" class="btn-delete" onclick="removeEdu(${idx})">${currentLang === 'ar' ? 'حذف' : 'Remove'}</button>
       </div>
-      <input type="text" placeholder="${currentLang === 'ar' ? 'المؤهل (مثال: بكالوريوس تقنية معلومات)' : 'Degree (e.g. B.Sc. in Computer Science)'}" value="${edu.degree || ''}" oninput="updateEduData(${idx}, 'degree', this.value)">
+      <input type="text" placeholder="${currentLang === 'ar' ? 'المؤهل (مثال: بكالوريوس تقنية معلومات)' : 'Degree (e.g. B.Sc. in Computer Science)'}" value="${esc(edu.degree)}" oninput="updateEduData(${idx}, 'degree', this.value)">
       <div class="row">
-        <input type="text" placeholder="${currentLang === 'ar' ? 'اسم الجامعة أو المعهد' : 'University / College'}" value="${edu.school || ''}" oninput="updateEduData(${idx}, 'school', this.value)">
-        <input type="text" placeholder="${currentLang === 'ar' ? 'سنة التخرج' : 'Graduation Year'}" value="${edu.dates || ''}" oninput="updateEduData(${idx}, 'dates', this.value)">
+        <input type="text" placeholder="${currentLang === 'ar' ? 'اسم الجامعة أو المعهد' : 'University / College'}" value="${esc(edu.school)}" oninput="updateEduData(${idx}, 'school', this.value)">
+        <input type="text" placeholder="${currentLang === 'ar' ? 'سنة التخرج' : 'Graduation Year'}" value="${esc(edu.dates)}" oninput="updateEduData(${idx}, 'dates', this.value)">
       </div>
     `;
     eduInputsContainer.appendChild(card);
@@ -257,11 +262,11 @@ function renderEduPreviewOnly() {
       item.className = 'cv-edu-item';
       item.innerHTML = `
         <div class="cv-item-header">
-          <span>${edu.school || ''}</span>
-          <span>${edu.dates || ''}</span>
+          <span>${esc(edu.school)}</span>
+          <span>${esc(edu.dates)}</span>
         </div>
         <div class="cv-item-sub">
-          <span>${edu.degree || ''}</span>
+          <span>${esc(edu.degree)}</span>
         </div>
       `;
       cvEduList.appendChild(item);
@@ -300,10 +305,10 @@ function renderCertifications() {
         <button type="button" onclick="removeCert(${index})" style="color: #ef4444; background: none; border: none; cursor: pointer; font-size: 0.8rem; font-weight: 500;">حذف</button>
       </div>
       <div class="row" style="margin-bottom: 8px;">
-        <input type="text" placeholder="اسم الشهادة أو الاعتماد" value="${cert.name || ''}" oninput="updateCertField(${index}, 'name', this.value)">
-        <input type="text" placeholder="الجهة المانحة (مثال: Google, PMI)" value="${cert.issuer || ''}" oninput="updateCertField(${index}, 'issuer', this.value)">
+        <input type="text" placeholder="اسم الشهادة أو الاعتماد" value="${esc(cert.name)}" oninput="updateCertField(${index}, 'name', this.value)">
+        <input type="text" placeholder="الجهة المانحة (مثال: Google, PMI)" value="${esc(cert.issuer)}" oninput="updateCertField(${index}, 'issuer', this.value)">
       </div>
-      <input type="text" placeholder="تاريخ الحصول عليها (مثال: 2024)" value="${cert.date || ''}" oninput="updateCertField(${index}, 'date', this.value)">
+      <input type="text" placeholder="تاريخ الحصول عليها (مثال: 2024)" value="${esc(cert.date)}" oninput="updateCertField(${index}, 'date', this.value)">
     `;
     certInputsList.appendChild(item);
   });
@@ -341,10 +346,10 @@ function updateCertPreview() {
   previewCertList.innerHTML = validCerts.map(c => `
     <div style="margin-bottom: 8px;">
       <div style="display: flex; justify-content: space-between; align-items: baseline; font-weight: 600; font-size: 0.95rem;">
-        <span>${c.name || ''}</span>
-        <span style="font-size: 0.85rem; color: #64748b;">${c.date || ''}</span>
+        <span>${esc(c.name)}</span>
+        <span style="font-size: 0.85rem; color: #64748b;">${esc(c.date)}</span>
       </div>
-      ${c.issuer ? `<div style="color: #475569; font-size: 0.88rem;">${c.issuer}</div>` : ''}
+      ${c.issuer ? `<div style="color: #475569; font-size: 0.88rem;">${esc(c.issuer)}</div>` : ''}
     </div>
   `).join('');
 }
@@ -755,7 +760,7 @@ if (langToggleBtn) {
     if (lblCertsEl) lblCertsEl.textContent = t.lblCerts;
     const addCertEl = document.getElementById('addCertBtn');
     if (addCertEl) addCertEl.textContent = t.addCert;
-    const cvHeadCertsEl = document.getElementById('cvHeadingCertifications');
+    const cvHeadCertsEl = document.getElementById('prevCertHeading');
     if (cvHeadCertsEl) cvHeadCertsEl.textContent = t.headCerts;
 
     // ترجمة الحقول الإرشادية (Placeholders)
