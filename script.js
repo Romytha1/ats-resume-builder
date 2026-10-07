@@ -702,9 +702,9 @@ const translations = {
   }
 };
 
-if (langToggleBtn) {
-  langToggleBtn.addEventListener('click', () => {
-    currentLang = currentLang === 'ar' ? 'en' : 'ar';
+// تطبيق لغة معيّنة على كل الصفحة (تُستدعى عند الضغط على الزر وعند فتح الصفحة)
+function applyLanguage(lang) {
+    currentLang = lang;
     const html = document.documentElement;
 
     if (currentLang === 'en') {
@@ -795,6 +795,13 @@ const setText = (id, text) => {
     renderEducation();
     renderCertifications();
     calculateAtsScore();
+}
+
+if (langToggleBtn) {
+  langToggleBtn.addEventListener('click', () => {
+    const next = currentLang === 'ar' ? 'en' : 'ar';
+    try { localStorage.setItem('ats_lang', next); } catch (e) {}
+    applyLanguage(next);
   });
 }
 // ==========================================
@@ -811,4 +818,8 @@ if (printBtn) {
 // ==========================================
 window.addEventListener('DOMContentLoaded', () => {
   loadAllData();
+  // استرجاع اللغة التي اختارها المستخدم سابقاً (تُشارَك مع صفحة الخصوصية)
+  let savedLang = 'ar';
+  try { savedLang = localStorage.getItem('ats_lang') || 'ar'; } catch (e) {}
+  if (savedLang === 'en') applyLanguage('en');
 });
