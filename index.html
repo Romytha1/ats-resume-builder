@@ -9,11 +9,15 @@
   <!-- عنوان التبويب وسيو محركات البحث -->
   <title>Smart ATS CV Builder | صانع السيرة الذاتية المهني المتوافق مع ATS</title>
   <meta name="description" content="أنشئ سيرة ذاتية احترافية مجانية متوافقة تماماً مع أنظمة الفرز الآلي (ATS). قوالب محسنة تضمن قراءة بياناتك وتزيد فرص قبولك الوظيفي.">
-  <meta name="keywords" content="ATS resume, سيرة ذاتية, فحص ATS, قالب سيرة ذاتية, CV builder, صانع سيرة ذاتية احترافية">
   <meta name="author" content="Smart ATS CV">
+  <meta name="theme-color" content="#2563eb">
+  <link rel="canonical" href="https://smartatscv.com/">
 
   <!-- إعدادات بطاقات المشاركة (WhatsApp, LinkedIn, Twitter, Facebook) -->
   <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Smart ATS CV">
+  <meta property="og:locale" content="ar_SA">
+  <meta property="og:locale:alternate" content="en_US">
   <meta property="og:url" content="https://smartatscv.com/">
   <meta property="og:title" content="Smart ATS CV Builder | صانع السيرة الذاتية المتوافق مع ATS">
   <meta property="og:description" content="صمم سيرتك الذاتية بسهولة وفق معايير أنظمة التوظيف العالمية بدون تعقيد.">
@@ -32,15 +36,34 @@
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" media="print" onload="this.media='all'"
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&family=Inter:wght@400;600;700&display=swap">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&family=Inter:wght@400;600;700&display=swap"></noscript>
+
+  <!-- بيانات منظمة لمحركات البحث -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Smart ATS CV",
+    "url": "https://smartatscv.com/",
+    "description": "صانع سيرة ذاتية مجاني متوافق مع أنظمة الفرز الآلي ATS. Free ATS-friendly resume builder.",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Any",
+    "inLanguage": ["ar", "en"],
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "SAR" },
+    "author": { "@type": "Person", "name": "Romytha Mohammed" }
+  }
+  </script>
 </head>
 <body>
 
   <!-- شريط التحكم العلوي -->
   <header class="app-header no-print">
+    <h1 class="sr-only">Smart ATS CV — صانع السيرة الذاتية المجاني المتوافق مع ATS</h1>
     <div class="logo">
       <span class="badge">ATS-Friendly</span>
-<h2 style="font-weight: 800; letter-spacing: -0.5px;">Smart ATS</h2>
+<h2 style="font-weight: 700; letter-spacing: -0.5px;">Smart ATS</h2>
     </div>
     <div class="actions">
       <button id="langToggleBtn" class="btn btn-secondary">English</button>
@@ -139,7 +162,7 @@
       <div class="a4-sheet" id="cvPaper">
         <!-- ترويسة الـ CV -->
         <div class="cv-header">
-          <h1 id="cvName">الاسم الكامل</h1>
+          <h2 id="cvName" class="cv-name">الاسم الكامل</h2>
           <div class="cv-role" id="cvTitle">المسمى الوظيفي</div>
           <div class="cv-contact" id="cvContact">
             <span id="cvEmail">email@example.com</span>
@@ -199,27 +222,27 @@
       <div style="display: flex; justify-content: center; align-items: center; gap: 8px; flex-wrap: wrap;">
         <!-- واتساب -->
         <a href="https://api.whatsapp.com/send?text=أداة%20ممتازة%20لبناء%20وفحص%20السيرة%20الذاتية%20لتتوافق%20مع%20أنظمة%20التوظيف%20ATS%20بشكل%20مجاني%20🎯%20https://smartatscv.com" 
-           target="_blank" 
-           style="display: inline-flex; align-items: center; gap: 5px; background-color: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; padding: 6px 14px; border-radius: 20px; text-decoration: none; font-size: 12px; font-weight: 600;">
+           target="_blank" rel="noopener noreferrer"
+           style="display: inline-flex; align-items: center; gap: 5px; background-color: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; padding: 6px 14px; border-radius: 20px; text-decoration: none; font-size: 12px; font-weight: 600;">
           <span id="lblShareWhatsapp">واتساب</span>
         </a>
 
         <!-- منصة X -->
         <a href="https://twitter.com/intent/tweet?text=أداة%20ممتازة%20لبناء%20وفحص%20السيرة%20الذاتية%20لتتوافق%20مع%20أنظمة%20التوظيف%20ATS%20بشكل%20مجاني%20🎯&url=https://smartatscv.com" 
-           target="_blank" 
+           target="_blank" rel="noopener noreferrer"
            style="display: inline-flex; align-items: center; gap: 5px; background-color: #f8fafc; color: #0f1419; border: 1px solid #e2e8f0; padding: 6px 14px; border-radius: 20px; text-decoration: none; font-size: 12px; font-weight: 600;">
           <span id="lblShareX">منصة X</span>
         </a>
 
         <!-- لينكد إن -->
         <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://smartatscv.com" 
-           target="_blank" 
+           target="_blank" rel="noopener noreferrer"
            style="display: inline-flex; align-items: center; gap: 5px; background-color: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; padding: 6px 14px; border-radius: 20px; text-decoration: none; font-size: 12px; font-weight: 600;">
           <span id="lblShareLinkedin">لينكد إن</span>
         </a>
 
         <!-- نسخ الرابط -->
-        <button onclick="navigator.clipboard.writeText('https://smartatscv.com'); this.innerText='تم النسخ! ✅'; setTimeout(() => this.innerText='نسخ الرابط', 2000)"
+        <button type="button" onclick="navigator.clipboard.writeText('https://smartatscv.com'); this.innerText='تم النسخ! ✅'; setTimeout(() => this.innerText='نسخ الرابط', 2000)"
                 style="display: inline-flex; align-items: center; gap: 5px; background-color: #f8fafc; color: #475569; border: 1px solid #cbd5e1; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer;">
           📋 <span id="lblCopyLink">نسخ الرابط</span>
         </button>
@@ -227,7 +250,7 @@
     </div>
 
     <!-- الحقوق والخصوصية -->
-    <div style="font-size: 0.8rem; color: #94a3b8; border-top: 1px solid #f1f5f9; padding-top: 16px;">
+    <div style="font-size: 0.8rem; color: #64748b; border-top: 1px solid #f1f5f9; padding-top: 16px;">
       <p id="footerRights" style="margin: 0 0 6px 0;">جميع الحقوق محفوظة - 2026 Smart ATS CV Builder ©</p>
 
       <!-- جديد: سطر الرسالة -->
@@ -236,12 +259,6 @@
         <span class="en-only">Free tools helping Arab job seekers get past hiring filters.</span>
       </p>
 
-      <style>
-        html[lang="en"] .ar-only { display: none; }
-        html[lang="ar"] .en-only { display: none; }
-        .maker-line a { color: #2563eb; text-decoration: none; font-weight: 600; }
-        .maker-line a:hover { text-decoration: underline; }
-      </style>
 
       <p class="maker-line" style="margin: 0 0 6px 0;">
         <span class="ar-only">تصميم وتطوير: Romytha Mohammed</span>
