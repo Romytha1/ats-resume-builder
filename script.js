@@ -1,7 +1,5 @@
-// تنظيف أي نص قبل إدخاله في innerHTML (منع XSS وكسر الحقول)
-function esc(v) {
-  return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-}
+import { esc } from './src/utils.js';
+import { computeScore } from './src/score.js';
 
 // الحقول الأساسية
 const inpName = document.getElementById('inpName');
@@ -54,6 +52,9 @@ let currentLang = 'ar';
 let experiences = [];
 let educations = [];
 let certifications = [];
+
+// ats-match.js (ملف منفصل) يقرأ الخبرات من هنا، لأن متغيرات الوحدة (module) لا تُرى من خارجها
+Object.defineProperty(window, 'experiences', { get: () => experiences });
 
 // ==========================================
 // 1. تحديث البيانات الشخصية والترويسة
@@ -416,90 +417,52 @@ function loadAllData() {
 // ==========================================
 // 6. احتساب نقاط توافق الـ ATS لحظياً
 // ==========================================
+const CHECK_TEXT = {
+  contact: { ar: 'بيانات التواصل كاملة (بريد وهاتف)', en: 'Complete contact details (email & phone)' },
+  summary: { ar: 'ملخص مهني واضح ومكتمل', en: 'Clear professional summary' },
+  experience: { ar: 'خبرة مهنية واحدة على الأقل', en: 'At least one work experience' },
+  education: { ar: 'المؤهل الأكاديمي والتعليمي', en: 'Academic education & degree' }
+};
+
 function calculateAtsScore() {
-  let score = 0;
   const isAr = currentLang === 'ar';
+  // الحساب في src/score.js (دالة نقية مُختبَرة)، وهنا نعرض النتيجة فقط
+  const { score, checks, skillsCount } = computeScore({
+    email: inpEmail ? inpEmail.value : '',
+    phone: inpPhone ? inpPhone.value : '',
+    summary: inpSummary ? inpSummary.value : '',
+    experiences,
+    educations,
+    skills: inpSkills ? inpSkills.value : ''
+  });
 
-  // 1. بيانات التواصل
-  const emailVal = inpEmail ? inpEmail.value.trim() : '';
-  const phoneVal = inpPhone ? inpPhone.value.trim() : '';
-  const hasEmail = emailVal.includes('@');
-  const hasPhone = phoneVal.length >= 8;
-
-  const chkContact = document.getElementById('chk-contact');
-  if (chkContact) {
-    if (hasEmail && hasPhone) {
-      score += 20;
-      chkContact.className = 'done';
-      chkContact.textContent = isAr ? '✅ بيانات التواصل كاملة (بريد وهاتف)' : '✅ Complete contact details (email & phone)';
-    } else {
-      chkContact.className = 'pending';
-      chkContact.textContent = isAr ? '⚪ بيانات التواصل كاملة (بريد وهاتف)' : '⚪ Complete contact details (email & phone)';
-    }
-  }
-
-  // 2. الملخص المهني
-  const summaryVal = inpSummary ? inpSummary.value.trim() : '';
-  const chkSummary = document.getElementById('chk-summary');
-  if (chkSummary) {
-    if (summaryVal.length >= 35) {
-      score += 20;
-      chkSummary.className = 'done';
-      chkSummary.textContent = isAr ? '✅ ملخص مهني واضح ومكتمل' : '✅ Clear professional summary';
-    } else {
-      chkSummary.className = 'pending';
-      chkSummary.textContent = isAr ? '⚪ ملخص مهني واضح ومكتمل' : '⚪ Clear professional summary';
-    }
-  }
-
-  // 3. الخبرة المهنية
-  const hasExp = experiences.some(e => (e.role && e.role.trim().length > 2) || (e.company && e.company.trim().length > 2));
-  const chkExp = document.getElementById('chk-experience');
-  if (chkExp) {
-    if (hasExp) {
-      score += 20;
-      chkExp.className = 'done';
-      chkExp.textContent = isAr ? '✅ خبرة مهنية واحدة على الأقل' : '✅ At least one work experience';
-    } else {
-      chkExp.className = 'pending';
-      chkExp.textContent = isAr ? '⚪ خبرة مهنية واحدة على الأقل' : '⚪ At least one work experience';
-    }
-  }
-
-  // 4. التعليم
-  const hasEdu = educations.some(e => (e.degree && e.degree.trim().length > 2) || (e.school && e.school.trim().length > 2));
-  const chkEdu = document.getElementById('chk-education');
-  if (chkEdu) {
-    if (hasEdu) {
-      score += 20;
-      chkEdu.className = 'done';
-      chkEdu.textContent = isAr ? '✅ المؤهل الأكاديمي والتعليمي' : '✅ Academic education & degree';
-    } else {
-      chkEdu.className = 'pending';
-      chkEdu.textContent = isAr ? '⚪ المؤهل الأكاديمي والتعليمي' : '⚪ Academic education & degree';
-    }
-  }
-
-  // 5. المهارات
-  const skillsVal = inpSkills ? inpSkills.value.trim() : '';
-  const skillsCount = skillsVal ? skillsVal.split(/[\n,،]+/).filter(s => s.trim().length > 0).length : 0;
-  const chkSkills = document.getElementById('chk-skills');
-  if (chkSkills) {
-    if (skillsCount >= 4) {
-      score += 20;
-      chkSkills.className = 'done';
-      chkSkills.textContent = isAr ? `✅ إضافة 4 مهارات أساسية فأكثر (${skillsCount} حالياً)` : `✅ 4+ core skills included (${skillsCount} currently)`;
-    } else {
-      chkSkills.className = 'pending';
-      chkSkills.textContent = isAr ? `⚪ إضافة 4 مهارات أساسية فأكثر (الحالي: ${skillsCount})` : `⚪ 4+ core skills included (currently: ${skillsCount})`;
-    }
-  }
+  const setCheck = (id, done, text) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.className = done ? 'done' : 'pending';
+    el.textContent = (done ? '✅ ' : '⚪ ') + text;
+  };
+  Object.keys(CHECK_TEXT).forEach((k) => setCheck('chk-' + k, checks[k], CHECK_TEXT[k][isAr ? 'ar' : 'en']));
+  const skillsText = isAr
+    ? (checks.skills ? `إضافة 4 مهارات أساسية فأكثر (${skillsCount} حالياً)` : `إضافة 4 مهارات أساسية فأكثر (الحالي: ${skillsCount})`)
+    : (checks.skills ? `4+ core skills included (${skillsCount} currently)` : `4+ core skills included (currently: ${skillsCount})`);
+  setCheck('chk-skills', checks.skills, skillsText);
 
   // تحديث الشريط الرقمي واللون
   const scoreBadge = document.getElementById('atsScoreText');
   const progressFill = document.getElementById('atsProgressFill');
 
-  if (scoreBadge) scoreBadge.textContent = `${score}%`;
+  // حالة البداية: رسالة ودّية بدل 0% وتلميح على الورقة الفارغة
+  const paper = document.getElementById('cvPaper');
+  const nameVal = (document.getElementById('inpName') || {}).value || '';
+  const isEmpty = score === 0 && !nameVal.trim();
+  if (scoreBadge) scoreBadge.textContent = isEmpty ? (currentLang === 'en' ? 'Start' : 'ابدأ') : `${score}%`;
+  if (paper) {
+    paper.classList.toggle('is-empty', isEmpty);
+    paper.setAttribute('data-hint', currentLang === 'en'
+      ? 'Start filling in the form and your resume will appear here'
+      : 'ابدأ بتعبئة البيانات وستظهر سيرتك هنا');
+  }
   if (progressFill) {
     progressFill.style.width = `${score}%`;
     if (score <= 40) {
@@ -795,6 +758,7 @@ const setText = (id, text) => {
     renderEducation();
     renderCertifications();
     calculateAtsScore();
+    labelTabs();
 }
 
 if (langToggleBtn) {
@@ -804,6 +768,45 @@ if (langToggleBtn) {
     applyLanguage(next);
   });
 }
+// ==========================================
+// تبويبا «تعديل | معاينة» (يظهران في الجوال فقط عبر CSS)
+// ==========================================
+const TAB_TXT = {
+  ar: { edit: '✏️ تعديل', preview: '👁️ معاينة' },
+  en: { edit: '✏️ Edit', preview: '👁️ Preview' }
+};
+
+function labelTabs() {
+  const T = TAB_TXT[currentLang === 'en' ? 'en' : 'ar'];
+  const e = document.getElementById('tab-edit');
+  const p = document.getElementById('tab-preview');
+  if (e) e.textContent = T.edit;
+  if (p) p.textContent = T.preview;
+}
+
+function setTab(tab) {
+  // نحفظ التبويب الحالي كـ attribute على <body>، والـ CSS هو الذي يخفي ويظهر
+  document.body.setAttribute('data-tab', tab);
+  ['edit', 'preview'].forEach((k) => {
+    const b = document.getElementById('tab-' + k);
+    if (b) b.classList.toggle('active', k === tab);
+  });
+}
+
+function initMobileTabs() {
+  const container = document.querySelector('.app-container');
+  if (!container || document.getElementById('mobileTabs')) return;
+  const bar = document.createElement('div');
+  bar.id = 'mobileTabs';
+  bar.className = 'mobile-tabs no-print';
+  bar.innerHTML = '<button type="button" id="tab-edit"></button><button type="button" id="tab-preview"></button>';
+  container.before(bar);
+  document.getElementById('tab-edit').addEventListener('click', () => setTab('edit'));
+  document.getElementById('tab-preview').addEventListener('click', () => { setTab('preview'); window.scrollTo(0, 0); });
+  labelTabs();
+  setTab('edit');
+}
+
 // ==========================================
 // 9. الطباعة
 // ==========================================
@@ -818,6 +821,7 @@ if (printBtn) {
 // ==========================================
 window.addEventListener('DOMContentLoaded', () => {
   loadAllData();
+  initMobileTabs();
   // استرجاع اللغة التي اختارها المستخدم سابقاً (تُشارَك مع صفحة الخصوصية)
   let savedLang = 'ar';
   try { savedLang = localStorage.getItem('ats_lang') || 'ar'; } catch (e) {}

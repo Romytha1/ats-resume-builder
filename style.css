@@ -231,7 +231,9 @@ textarea:focus {
   width: var(--paper-width);
   min-height: var(--paper-min-height);
   background: #ffffff;
-  padding: 20mm;
+  padding: 12mm 15mm; /* نفس هوامش الطباعة (@page) لتتطابق المعاينة مع الـ PDF */
+  max-width: 100%;
+  position: relative;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   font-size: 10pt;
   color: #000000;
@@ -472,6 +474,7 @@ textarea:focus {
    =================================================== */
 @media screen and (max-width: 900px) {
   .app-header {
+    position: static !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
@@ -585,3 +588,61 @@ html[lang="en"] .ar-only { display: none; }
 html[lang="ar"] .en-only { display: none; }
 .maker-line a { color: #2563eb; text-decoration: none; font-weight: 600; }
 .maker-line a:hover { text-decoration: underline; }
+
+
+/* --- مسافات العناوين فوق الحقول --- */
+.form-group-block > h4 { margin-bottom: 0.5rem; }
+.section-title h3 { margin-bottom: 0.75rem; }
+
+/* --- تلميح الورقة الفارغة (لا يظهر في الطباعة) --- */
+.a4-sheet.is-empty::after {
+  content: attr(data-hint);
+  position: absolute;
+  top: 45%;
+  left: 10%;
+  right: 10%;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 11pt;
+  line-height: 1.7;
+  pointer-events: none;
+}
+@media print {
+  .a4-sheet.is-empty::after { display: none !important; }
+}
+
+
+/* ===================================================
+   تبويبا تعديل / معاينة (الجوال فقط)
+   =================================================== */
+.mobile-tabs { display: none; }
+
+@media screen and (max-width: 900px) {
+  .mobile-tabs {
+    display: flex;
+    position: sticky;
+    top: 0;
+    z-index: 90;
+    background: #ffffff;
+    border-bottom: 1px solid var(--border-color);
+  }
+  .mobile-tabs button {
+    flex: 1;
+    padding: 12px 8px;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+  }
+  .mobile-tabs button.active {
+    color: var(--accent-color);
+    border-bottom-color: var(--accent-color);
+  }
+  /* إخفاء القسم غير المختار (تحت 900px وعلى الشاشة فقط، فلا يؤثر على الطباعة) */
+  body[data-tab="edit"] .preview-section { display: none !important; }
+  body[data-tab="preview"] .form-section { display: none !important; }
+}

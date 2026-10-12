@@ -1,32 +1,15 @@
-// ats-match.js — أضِف <script src="ats-match.js"></script> بعد script.js في index.html
+import { analyzeMatch } from './src/match.js';
+// ats-match.js — <script type="module" src="ats-match.js"></script> بعد script.js في index.html
 // يضيف: (1) مطابقة الكلمات المفتاحية مع إعلان الوظيفة  (2) تفعيل زري «حفظ نسخة» و«استرجاع» (كانا بلا وظيفة)
 (function () {
-  const STOP = new Set(('the and for with you your our are will have has from that this their they who all can able work ' +
-    'team years year experience ability skills strong good plus use using including etc such new more other than into ' +
-    'في من على إلى الى عن مع هذا هذه ذلك التي الذي أو او و ان أن كل لدى لديه يجب نحن أنت خبرة سنوات سنة مهارات القدرة ' +
-    'العمل عمل فريق مطلوب نبحث عن ذات مثل أكثر بين خلال حول لدينا ضمن').split(/\s+/));
-
-  const tokens = (text) =>
-    (text.toLowerCase().match(/[a-z][a-z0-9+#.]{1,}|[\u0600-\u06FF]{3,}/g) || [])
-      .map((t) => t.replace(/\.+$/, ''))
-      .filter((t) => t.length >= 3 && !STOP.has(t));
-
   const cvText = () => {
     const v = (id) => (document.getElementById(id) || {}).value || '';
     const parts = [v('inpTitle'), v('inpSummary'), v('inpSkills')];
-    (window.experiences || experiences || []).forEach((e) => parts.push(e.role, e.company, e.desc));
+    (window.experiences || []).forEach((e) => parts.push(e.role, e.company, e.desc));
     return parts.join(' ').toLowerCase();
   };
 
-  function analyze(jd) {
-    const freq = {};
-    tokens(jd).forEach((t) => (freq[t] = (freq[t] || 0) + 1));
-    const top = Object.entries(freq).sort((a, b) => b[1] - a[1] || b[0].length - a[0].length).slice(0, 15).map((e) => e[0]);
-    const have = new Set(tokens(cvText()));
-    const raw = cvText();
-    const found = top.filter((k) => have.has(k) || raw.includes(k));
-    return { top, found, missing: top.filter((k) => !found.includes(k)) };
-  }
+  const analyze = (jd) => analyzeMatch(jd, cvText());
 
   const TXT = {
     ar: { title: '🔍 طابق سيرتك مع إعلان الوظيفة', hint: 'الصق وصف الوظيفة لنعرض الكلمات المفتاحية الناقصة في سيرتك.',
@@ -45,15 +28,20 @@
     const anchor = document.querySelector('.ats-meter-card');
     if (!anchor || document.getElementById('jdCard')) return;
     const st = document.createElement('style');
-    st.textContent = `.jd-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:16px;margin-bottom:20px}
+    st.textContent = `.jd-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px 16px;margin-bottom:12px}
+      .jd-card summary,.svc-card summary{display:flex;justify-content:space-between;align-items:center;cursor:pointer;list-style:none;font-weight:700}
+      .jd-card summary::-webkit-details-marker,.svc-card summary::-webkit-details-marker{display:none}
+      .jd-card summary::after,.svc-card summary::after{content:'▾';color:#64748b}
+      .jd-card[open] summary::after,.svc-card[open] summary::after{content:'▴'}
+      .jd-card[open] summary{margin-bottom:6px}
       .jd-card textarea{min-height:90px}.kw{display:inline-block;margin:2px;padding:2px 8px;border-radius:12px;font-size:.78rem}
       .kw.ok{background:#dcfce7;color:#166534}.kw.no{background:#fee2e2;color:#991b1b}#jdResult{font-size:.85rem;margin-top:10px}
       #jdResult b{display:block;margin:8px 0 2px}`;
     document.head.appendChild(st);
-    const card = document.createElement('div');
+    const card = document.createElement('details');
     card.id = 'jdCard';
-    card.className = 'jd-card';
-    card.innerHTML = `<div class="ats-meter-title" id="jdTitle"></div>
+    card.className = 'jd-card no-print';
+    card.innerHTML = `<summary class="ats-meter-title" id="jdTitle"></summary>
       <p id="jdHint" style="font-size:.8rem;color:#64748b;margin:6px 0"></p>
       <textarea id="jdInput"></textarea>
       <button type="button" id="jdBtn" class="btn btn-primary"></button><div id="jdResult" aria-live="polite"></div>`;
