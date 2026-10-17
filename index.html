@@ -77,14 +77,19 @@
     <!-- لوحة إدخال البيانات -->
     <section class="form-section no-print">
       <div class="section-title">
-        <!-- شريط مقياس توافق الـ ATS -->
+        <!-- مؤشر جاهزية السيرة الذاتية -->
         <div class="ats-meter-card">
-          <div class="ats-meter-header">
-<span class="ats-meter-title" id="lblAtsScoreTitle">🎯 نسبة توافق السيرة مع أنظمة ATS</span>
-            <span id="atsScoreText" class="ats-score-badge">0%</span>
-          </div>
-          <div class="ats-progress-bar">
-            <div id="atsProgressFill" class="ats-progress-fill" style="width: 0%;"></div>
+<div class="ats-meter-header">
+  <span class="ats-meter-title" id="lblAtsScoreTitle">🎯 مؤشر جاهزية السيرة الذاتية</span>
+  <span id="atsScoreText" class="ats-score-badge">0%</span>
+</div>
+
+<p id="atsScoreNote" style="font-size: 12px; color: #64748b; margin: 8px 0;">
+  مؤشر إرشادي يعتمد على اكتمال المعلومات الأساسية، ولا يضمن اجتياز أنظمة ATS أو القبول الوظيفي.
+</p>
+
+<div class="ats-progress-bar">
+              <div id="atsProgressFill" class="ats-progress-fill" style="width: 0%;"></div>
           </div>
           <ul class="ats-checklist" id="atsChecklist">
             <li id="chk-contact" class="pending">⚪ بيانات التواصل كاملة (بريد وهاتف)</li>

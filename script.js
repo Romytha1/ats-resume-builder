@@ -687,8 +687,14 @@ function applyLanguage(lang) {
     if (addEduBtn) addEduBtn.textContent = t.addEdu;
 
     const atsTitleEl = document.getElementById('lblAtsScoreTitle');
-    if (atsTitleEl) atsTitleEl.textContent = currentLang === 'ar' ? '🎯 نسبة توافق السيرة مع أنظمة ATS' : '🎯 ATS Compatibility Score';
+if (atsTitleEl) atsTitleEl.textContent = currentLang === 'ar' ? '🎯 مؤشر جاهزية السيرة الذاتية' : '🎯 Resume Readiness Score';
+const atsNoteEl = document.getElementById('atsScoreNote');
 
+if (atsNoteEl) {
+  atsNoteEl.textContent = currentLang === 'ar'
+    ? 'مؤشر إرشادي يعتمد على اكتمال المعلومات الأساسية، ولا يضمن اجتياز أنظمة ATS أو القبول الوظيفي.'
+    : 'This score reflects the completeness of key resume information. It does not guarantee ATS compatibility or job acceptance.';
+}
     const formTitleEl = document.getElementById('formTitle');
     const formSubEl = document.getElementById('formSub');
     const lblPersonalEl = document.getElementById('lblPersonalInfo');
