@@ -75,9 +75,19 @@ import { analyzeMatch } from './src/match.js';
     const KEY = 'ats_cv_unified_draft';
     const ex = document.getElementById('exportBtn'), im = document.getElementById('importTriggerBtn'), inp = document.getElementById('importInput');
     if (ex) ex.onclick = () => {
-      const blob = new Blob([localStorage.getItem(KEY) || '{}'], { type: 'application/json' });
-      const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: 'my-cv-backup.json' });
-      a.click(); URL.revokeObjectURL(a.href);
+      const blob = new Blob(
+        [localStorage.getItem(KEY) || '{}'],
+        { type: 'application/json;charset=utf-8' }
+      );
+
+      const a = Object.assign(document.createElement('a'), {
+        href: URL.createObjectURL(blob),
+        download: 'my-cv-backup.json'
+      });
+
+      a.click();
+
+      setTimeout(() => URL.revokeObjectURL(a.href), 60000);
     };
     if (im && inp) {
       im.onclick = () => inp.click();
