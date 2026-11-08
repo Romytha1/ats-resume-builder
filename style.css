@@ -646,3 +646,40 @@ html[lang="ar"] .en-only { display: none; }
   body[data-tab="edit"] .preview-section { display: none !important; }
   body[data-tab="preview"] .form-section { display: none !important; }
 }
+/* Homepage introduction */
+.seo-intro {
+  max-width: 1100px;
+  margin: 20px auto 12px;
+  padding: 16px 24px;
+  text-align: center;
+}
+
+.seo-intro h2 {
+  margin: 0 0 8px;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #1e293b;
+  line-height: 1.5;
+}
+
+.seo-intro p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #64748b;
+  line-height: 1.8;
+}
+
+@media (max-width: 768px) {
+  .seo-intro {
+    padding: 12px 16px;
+    margin: 12px auto 8px;
+  }
+
+  .seo-intro h2 {
+    font-size: 1.1rem;
+  }
+
+  .seo-intro p {
+    font-size: 0.85rem;
+  }
+}

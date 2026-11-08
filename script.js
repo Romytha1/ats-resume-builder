@@ -685,7 +685,21 @@ function applyLanguage(lang) {
     if (printBtn) printBtn.textContent = t.print;
     if (addExpBtn) addExpBtn.textContent = t.addExp;
     if (addEduBtn) addEduBtn.textContent = t.addEdu;
+// Homepage SEO introduction translation
+const seoIntroTitleEl = document.getElementById('seoIntroTitle');
+const seoIntroDescEl = document.querySelector('.seo-intro p');
 
+if (seoIntroTitleEl) {
+  seoIntroTitleEl.textContent = currentLang === 'ar'
+    ? 'أنشئ سيرة ذاتية احترافية مجانًا بالعربية والإنجليزية'
+    : 'Create a Professional Resume for Free in Arabic and English';
+}
+
+if (seoIntroDescEl) {
+  seoIntroDescEl.textContent = currentLang === 'ar'
+    ? 'استخدم Smart ATS CV لإنشاء سيرة ذاتية بتنسيق منظم مناسب للقراءة بواسطة أنظمة تتبع المتقدمين (ATS). تابع التعديلات عبر المعاينة المباشرة، واستفد من مؤشر الجاهزية الإرشادي، ثم احفظ سيرتك الذاتية بصيغة PDF.'
+    : 'Use Smart ATS CV to build a well-structured resume designed for readability by Applicant Tracking Systems (ATS). Preview your changes instantly, check the advisory readiness score, and save your resume as a PDF.';
+}
     const atsTitleEl = document.getElementById('lblAtsScoreTitle');
 if (atsTitleEl) atsTitleEl.textContent = currentLang === 'ar' ? '🎯 مؤشر جاهزية السيرة الذاتية' : '🎯 Resume Readiness Score';
 const atsNoteEl = document.getElementById('atsScoreNote');
